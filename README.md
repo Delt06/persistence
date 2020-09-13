@@ -48,5 +48,5 @@ In Unity, create a GameObject with the following components attached:
 - `PlayerDataContainer`
 - `DemoScript`
 
-That's it! Run the game and can verify that data is indeed saved.
+That's it! Run the game and verify that data is indeed saved.
 (On Windows, check `C:\\Users\[user_name]\AppData\\LocalLow\[company_name]\[product_name]`) 
