@@ -5,7 +5,7 @@ Repository contains a demo project.
 
 ## Components
 
-`PersistentModelContainer<T>` is responsible for data model. It can be used together with any supported serialization method. By now, there are:
+`PersistentModelContainer<T>` is responsible for saving (caching, scheduling, etc.) data models. It can be used together with any supported serialization method. By now, there are:
 - XML (`XmlModelSerializer`)
 - Binary (`BinaryModelSerializer`)
 - Binary Encrypted (`SecureModelSerializer`) with either Rijndael or Base64 encryption.
