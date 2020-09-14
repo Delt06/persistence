@@ -13,5 +13,7 @@ namespace Persistence.Serialization
 		bool TryDeserialize(out object model);
 
 		void Flush();
+		
+		event EventHandler<object> DeserializationError;
 	}
 }

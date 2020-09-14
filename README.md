@@ -10,6 +10,8 @@ Repository contains a demo project.
 - Binary (`BinaryModelSerializer`)
 - Binary Encrypted (`SecureModelSerializer`) with either Rijndael or Base64 encryption.
 
+Also, a `ModelSerializationLog` component is available.
+
 ## Example
 
 Define a model:

@@ -50,5 +50,12 @@ namespace Persistence.Serialization
 		}
 
 		protected virtual void OnDestroy() { }
+
+		public event EventHandler<object> DeserializationError;
+
+		protected virtual void OnDeserializationError(object error)
+		{
+			DeserializationError?.Invoke(this, error);
+		}
 	}
 }

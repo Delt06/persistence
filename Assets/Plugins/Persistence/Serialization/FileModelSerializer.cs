@@ -19,6 +19,13 @@ namespace Persistence.Serialization
 		protected sealed override bool TryDeserializeIfSetUp(out object model)
 		{
 			Stream.Position = 0;
+
+			if (Stream.Length == 0)
+			{
+				ReportDeserializationError("The stream is empty.");
+				model = default;
+				return false;
+			}
 			
 			try
 			{
@@ -27,11 +34,15 @@ namespace Persistence.Serialization
 			}
 			catch (Exception e)
 			{
-				Debug.LogWarning("Could not deserialize model because:");
-				Debug.LogWarning(e);
+				ReportDeserializationError(e);
 				model = default;
 				return false;
 			}
+		}
+
+		private void ReportDeserializationError(object error)
+		{
+			OnDeserializationError(error);
 		}
 
 		protected abstract object DeserializeViaFormatter();
@@ -40,13 +51,13 @@ namespace Persistence.Serialization
 		{
 			Stream = new FileStream(FullPath, FileMode.OpenOrCreate);
 		}
-		
+
+		private string FullPath => Path.Combine(Application.persistentDataPath, _fileName);
+
 		protected override void FlushIfSetUp()
 		{
 			Stream.Flush();
 		}
-		
-		private string FullPath => Path.Combine(Application.persistentDataPath, _fileName);
 
 		protected override void OnDestroy()
 		{
@@ -54,6 +65,6 @@ namespace Persistence.Serialization
 			Stream?.Dispose();
 		}
 		
-		protected Stream Stream { get; private set; }
+		protected FileStream Stream { get; private set; }
 	}
 }
