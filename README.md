@@ -5,7 +5,7 @@ Repository contains a demo project.
 
 ## Components
 
-`PersistentModelContainer<T>` is responsible for data model. It can be used together with any supported serialization method. By now, there are:
+`PersistentModelContainer<T>` is responsible for saving (caching, scheduling, etc.) data models. It can be used together with any supported serialization method. By now, there are:
 - XML (`XmlModelSerializer`)
 - Binary (`BinaryModelSerializer`)
 - Binary Encrypted (`SecureModelSerializer`) with either Rijndael or Base64 encryption.
@@ -50,5 +50,5 @@ In Unity, create a GameObject with the following components attached:
 - `PlayerDataContainer`
 - `DemoScript`
 
-That's it! Run the game and can verify that data is indeed saved.
-(On Windows, check `C:\\Users\\[user_name]\AppData\\LocalLow\[company_name]\[product_name]`) 
+That's it! Run the game and verify that data is indeed saved.
+(On Windows, check `C:\\Users\[user_name]\AppData\\LocalLow\[company_name]\[product_name]`) 
