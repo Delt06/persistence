@@ -14,7 +14,7 @@ Also, a `ModelSerializationLog` component is available.
 
 ## Example
 
-Define a model:
+Define a model (it has to have a parameterless constructor):
 ```c#
 public class PlayerData
 {
