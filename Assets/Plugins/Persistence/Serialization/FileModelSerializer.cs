@@ -11,6 +11,7 @@ namespace Persistence.Serialization
 		protected override void SerializeIfSetUp(object model)
 		{
 			Stream.Position = 0;
+			Stream.SetLength(0);
 			SerializeViaFormatter(model);
 		}
 
@@ -49,7 +50,7 @@ namespace Persistence.Serialization
 		
 		protected override void SetUpProcedure(Type modelType)
 		{
-			Stream = new FileStream(FullPath, FileMode.Create);
+			Stream = new FileStream(FullPath, FileMode.OpenOrCreate);
 		}
 
 		private string FullPath => Path.Combine(Application.persistentDataPath, _fileName);
