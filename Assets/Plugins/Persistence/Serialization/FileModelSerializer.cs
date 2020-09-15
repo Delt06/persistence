@@ -49,7 +49,7 @@ namespace Persistence.Serialization
 		
 		protected override void SetUpProcedure(Type modelType)
 		{
-			Stream = new FileStream(FullPath, FileMode.OpenOrCreate);
+			Stream = new FileStream(FullPath, FileMode.Create);
 		}
 
 		private string FullPath => Path.Combine(Application.persistentDataPath, _fileName);
