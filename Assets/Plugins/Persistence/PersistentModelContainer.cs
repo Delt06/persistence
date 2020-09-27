@@ -37,12 +37,25 @@ namespace Persistence
 
 		private void OnDisable()
 		{
+			CleanUp();
+		}
+
+		private void CleanUp()
+		{
 			if (_serializer == null) return;
-			
+
 			ForceSaveChanges();
-			
+
 			if (_serializer.IsSetUp)
+			{
 				_serializer.Flush();
+				_serializer = null;
+			}
+		}
+
+		private void OnApplicationQuit()
+		{
+			CleanUp();
 		}
 
 		private void LateUpdate()
