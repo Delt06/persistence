@@ -16,6 +16,7 @@ Also, a `ModelSerializationLog` component is available.
 
 Define a model (it has to have a parameterless constructor):
 ```c#
+[Serializable]
 public class PlayerData
 {
     public string Name = "Player";
