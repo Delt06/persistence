@@ -53,6 +53,13 @@ namespace Persistence
 			}
 		}
 
+		private void OnApplicationPause(bool pauseStatus)
+		{
+			if (_serializer == null) return;
+			if (pauseStatus)
+				ForceSaveChanges();
+		}
+
 		private void OnApplicationQuit()
 		{
 			CleanUp();
