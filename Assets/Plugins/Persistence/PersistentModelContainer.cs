@@ -1,4 +1,5 @@
-﻿using Persistence.Serialization;
+﻿using System;
+using Persistence.Serialization;
 using UnityEngine;
 
 namespace Persistence
@@ -57,6 +58,13 @@ namespace Persistence
 		{
 			if (_serializer == null) return;
 			if (pauseStatus)
+				ForceSaveChanges();
+		}
+
+		private void OnApplicationFocus(bool hasFocus)
+		{
+			if (_serializer == null) return;
+			if (!hasFocus)
 				ForceSaveChanges();
 		}
 
