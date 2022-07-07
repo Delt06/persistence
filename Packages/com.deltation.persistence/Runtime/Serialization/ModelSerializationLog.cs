@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Persistence.Serialization
+namespace DELTation.Persistence.Serialization
 {
 	[RequireComponent(typeof(IModelSerializer))]
 	public sealed class ModelSerializationLog : MonoBehaviour

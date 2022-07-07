@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace Persistence.Serialization
+namespace DELTation.Persistence.Serialization
 {
 	public abstract class FileModelSerializer : ModelSerializer
 	{

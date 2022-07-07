@@ -1,4 +1,4 @@
-﻿namespace Persistence
+﻿namespace DELTation.Persistence
 {
 	public interface IModelContainer<T>
 	{

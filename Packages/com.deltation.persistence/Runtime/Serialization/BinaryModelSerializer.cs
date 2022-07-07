@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Persistence.Serialization
+namespace DELTation.Persistence.Serialization
 {
 	public sealed class BinaryModelSerializer : FileModelSerializer
 	{

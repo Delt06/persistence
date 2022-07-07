@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-namespace Persistence.Serialization
+namespace DELTation.Persistence.Serialization
 {
 	public sealed class SecureModelSerializer : FileModelSerializer
 	{

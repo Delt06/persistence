@@ -1,8 +1,7 @@
-﻿using System;
-using Persistence.Serialization;
+﻿using DELTation.Persistence.Serialization;
 using UnityEngine;
 
-namespace Persistence
+namespace DELTation.Persistence
 {
 	[RequireComponent(typeof(ModelSerializer))]
 	public class PersistentModelContainer<T> : MonoBehaviour, IModelContainer<T> where T : class, new()

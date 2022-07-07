@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Persistence.Serialization
+namespace DELTation.Persistence.Serialization
 {
 	public interface IModelSerializer
 	{

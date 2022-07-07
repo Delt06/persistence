@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Persistence.Serialization
+namespace DELTation.Persistence.Serialization
 {
 	public sealed class XmlModelSerializer : FileModelSerializer
 	{
