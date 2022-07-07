@@ -4,23 +4,23 @@ using UnityEngine.UI;
 
 public class Demo : MonoBehaviour
 {
-	[SerializeField] private InputField _text = default;
-	
-	public void Read()
-	{
-		_text.text = _modelContainer.Model.PlayerName;
-	}
+    [SerializeField] private InputField _text;
 
-	public void Write()
-	{
-		_modelContainer.Model.PlayerName = _text.text;
-		_modelContainer.SaveChanges();
-	}
+    private PersistentStateMonoBase<DemoModel> _modelContainer;
 
-	private void Awake()
-	{
-		_modelContainer = GetComponentInChildren<IModelContainer<DemoModel>>();
-	}
+    private void Awake()
+    {
+        _modelContainer = GetComponentInChildren<PersistentStateMonoBase<DemoModel>>();
+    }
 
-	private IModelContainer<DemoModel> _modelContainer;
+    public void Read()
+    {
+        _text.text = _modelContainer.Model.PlayerName;
+    }
+
+    public void Write()
+    {
+        _modelContainer.Model.PlayerName = _text.text;
+        _modelContainer.Save();
+    }
 }
