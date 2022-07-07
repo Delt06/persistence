@@ -1,4 +1,5 @@
-﻿using DELTation.Persistence.Serialization;
+﻿using System;
+using DELTation.Persistence.Serialization;
 using UnityEngine;
 
 namespace DELTation.Persistence
@@ -6,7 +7,7 @@ namespace DELTation.Persistence
     [RequireComponent(typeof(ModelSerializer))]
     public class PersistentModelContainer<T> : MonoBehaviour, IModelContainer<T> where T : class, new()
     {
-        [SerializeField] private WriteIntervalType _writeIntervalType = WriteIntervalType.Frames;
+        [SerializeField] private WriteMode _writeMode = WriteMode.Frames;
         [SerializeField] private float _intervalSize = 1f;
         private T _cachedModel;
         private int _framesSinceLastWrite;
@@ -22,12 +23,13 @@ namespace DELTation.Persistence
             {
                 if (!_saveScheduled) return false;
 
-                switch (_writeIntervalType)
+                return _writeMode switch
                 {
-                    case WriteIntervalType.Frames: return _framesSinceLastWrite >= _intervalSize;
-                    case WriteIntervalType.Seconds: return _secondsSinceLastWrite >= _intervalSize;
-                    default: return true;
-                }
+                    WriteMode.Frames => _framesSinceLastWrite >= _intervalSize,
+                    WriteMode.Seconds => _secondsSinceLastWrite >= _intervalSize,
+                    WriteMode.Manual => false,
+                    _ => throw new ArgumentOutOfRangeException(nameof(_writeMode), "Invalid write mode."),
+                };
             }
         }
 
@@ -113,7 +115,7 @@ namespace DELTation.Persistence
             }
         }
 
-        private void ForceSaveChanges()
+        public void ForceSaveChanges()
         {
             _saveScheduled = false;
             _framesSinceLastWrite = 0;
@@ -123,10 +125,11 @@ namespace DELTation.Persistence
                 _serializer.Serialize(_cachedModel);
         }
 
-        private enum WriteIntervalType
+        private enum WriteMode
         {
             Frames,
             Seconds,
+            Manual,
         }
     }
 }
