@@ -26,4 +26,65 @@ Add the following line to `Packages/manifest.json`:
 
 ## Usage
 
-TODO: Write about package features here.
+- Create a persistent model:
+```csharp
+using System;
+
+[Serializable]
+public class DemoModel
+{
+    public string PlayerName = "Player";
+    public string[] Data = { "1", "2", "3" };
+}
+```
+
+- Define a component that will manage the persistent state:
+```csharp
+using DELTation.Persistence;
+using DELTation.Persistence.Building;
+
+public class DemoPersistentStateMono : PersistentStateMonoBase<DemoModel>
+{
+    protected override void ConstructPersistentState(PersistentStateBuilder<DemoModel> builder)
+    {
+        builder
+            .WithJsonUtilitySerializer() // use JSON
+            .WithDefaultModelFallback() // use default constructor if no data was stored
+            .WithPeriodicWrite(1f) // save once a second automatically
+            ;
+    }
+}
+```
+
+- Use the component to manage persistent data
+```csharp
+using DELTation.Persistence;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class Demo : MonoBehaviour
+{
+    [SerializeField] private InputField _text;
+
+    private PersistentStateMonoBase<DemoModel> _modelContainer;
+
+    private void Awake()
+    {
+        // get access to the component
+        _modelContainer = GetComponentInChildren<PersistentStateMonoBase<DemoModel>>();
+    }
+
+    public void Read()
+    {
+        // read a value from the model 
+        _text.text = _modelContainer.Model.PlayerName;
+    }
+
+    public void Write()
+    {
+        // write a value to the model and then save it (mark as dirty)
+        _modelContainer.Model.PlayerName = _text.text;
+        _modelContainer.Save();
+    }
+}
+```
