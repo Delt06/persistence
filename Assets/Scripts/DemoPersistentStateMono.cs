@@ -8,7 +8,7 @@ public class DemoPersistentStateMono : PersistentStateMonoBase<DemoModel>
         builder
             .WithJsonUtilitySerializer()
             .WithDefaultModelFallback()
-            .WritePeriodicWrite(1f)
+            .WithPeriodicWrite(1f)
             ;
     }
 }
