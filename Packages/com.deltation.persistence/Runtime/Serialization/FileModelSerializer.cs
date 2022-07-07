@@ -4,68 +4,68 @@ using UnityEngine;
 
 namespace DELTation.Persistence.Serialization
 {
-	public abstract class FileModelSerializer : ModelSerializer
-	{
-		[SerializeField] private string _fileName = "file.save";
+    public abstract class FileModelSerializer : ModelSerializer
+    {
+        [SerializeField] private string _fileName = "file.save";
 
-		protected override void SerializeIfSetUp(object model)
-		{
-			Stream.Position = 0;
-			Stream.SetLength(0);
-			SerializeViaFormatter(model);
-		}
+        private string FullPath => Path.Combine(PersistenceUtils.SavesPath, _fileName);
 
-		protected abstract void SerializeViaFormatter(object model);
+        protected FileStream Stream { get; private set; }
 
-		protected sealed override bool TryDeserializeIfSetUp(out object model)
-		{
-			Stream.Position = 0;
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Stream?.Dispose();
+        }
 
-			if (Stream.Length == 0)
-			{
-				ReportDeserializationError("The stream is empty.");
-				model = default;
-				return false;
-			}
-			
-			try
-			{
-				model = DeserializeViaFormatter();
-				return true;
-			}
-			catch (Exception e)
-			{
-				ReportDeserializationError(e);
-				model = default;
-				return false;
-			}
-		}
+        protected override void SerializeIfSetUp(object model)
+        {
+            Stream.Position = 0;
+            Stream.SetLength(0);
+            SerializeViaFormatter(model);
+        }
 
-		private void ReportDeserializationError(object error)
-		{
-			OnDeserializationError(error);
-		}
+        protected abstract void SerializeViaFormatter(object model);
 
-		protected abstract object DeserializeViaFormatter();
-		
-		protected override void SetUpProcedure(Type modelType)
-		{
-			Stream = new FileStream(FullPath, FileMode.OpenOrCreate);
-		}
+        protected sealed override bool TryDeserializeIfSetUp(out object model)
+        {
+            Stream.Position = 0;
 
-		private string FullPath => Path.Combine(Application.persistentDataPath, _fileName);
+            if (Stream.Length == 0)
+            {
+                ReportDeserializationError("The stream is empty.");
+                model = default;
+                return false;
+            }
 
-		protected override void FlushIfSetUp()
-		{
-			Stream.Flush();
-		}
+            try
+            {
+                model = DeserializeViaFormatter();
+                return true;
+            }
+            catch (Exception e)
+            {
+                ReportDeserializationError(e);
+                model = default;
+                return false;
+            }
+        }
 
-		protected override void OnDestroy()
-		{
-			base.OnDestroy();
-			Stream?.Dispose();
-		}
-		
-		protected FileStream Stream { get; private set; }
-	}
+        private void ReportDeserializationError(object error)
+        {
+            OnDeserializationError(error);
+        }
+
+        protected abstract object DeserializeViaFormatter();
+
+        protected override void SetUpProcedure(Type modelType)
+        {
+            Stream = new FileStream(FullPath, FileMode.OpenOrCreate);
+        }
+
+        protected override void FlushIfSetUp()
+        {
+            Stream.Flush();
+        }
+    }
 }

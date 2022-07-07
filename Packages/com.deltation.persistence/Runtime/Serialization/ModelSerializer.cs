@@ -3,59 +3,57 @@ using UnityEngine;
 
 namespace DELTation.Persistence.Serialization
 {
-	public abstract class ModelSerializer : MonoBehaviour, IModelSerializer
-	{
-		public void SetUp(Type modelType)
-		{
-			if (IsSetUp) return;
+    public abstract class ModelSerializer : MonoBehaviour, IModelSerializer
+    {
+        protected virtual void OnDestroy() { }
 
-			SetUpProcedure(modelType);
-			IsSetUp = true;
-		}
+        public void SetUp(Type modelType)
+        {
+            if (IsSetUp) return;
 
-		protected abstract void SetUpProcedure(Type modelType);
-		public bool IsSetUp { get; private set; }
+            SetUpProcedure(modelType);
+            IsSetUp = true;
+        }
 
-		public void Serialize(object model)
-		{
-			if (model == null) throw new ArgumentNullException(nameof(model));
-			RequireSetUp();
-			SerializeIfSetUp(model);
-		}
+        public bool IsSetUp { get; private set; }
 
-		protected abstract void SerializeIfSetUp(object model);
+        public void Serialize(object model)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            RequireSetUp();
+            SerializeIfSetUp(model);
+        }
 
-		public bool TryDeserialize(out object model)
-		{
-			RequireSetUp();
-			return TryDeserializeIfSetUp(out model);
-		}
+        public bool TryDeserialize(out object model)
+        {
+            RequireSetUp();
+            return TryDeserializeIfSetUp(out model);
+        }
 
-		protected abstract bool TryDeserializeIfSetUp(out object model);
+        public void Flush()
+        {
+            RequireSetUp();
+            FlushIfSetUp();
+        }
 
-		public void Flush()
-		{
-			RequireSetUp();
-			FlushIfSetUp();
-		}
+        public event EventHandler<object> DeserializationError;
 
-		protected abstract void FlushIfSetUp();
+        protected abstract void SetUpProcedure(Type modelType);
 
-		protected virtual void RequireSetUp()
-		{
-			if (!IsSetUp)
-			{
-				throw new InvalidOperationException("Not set up.");
-			}
-		}
+        protected abstract void SerializeIfSetUp(object model);
 
-		protected virtual void OnDestroy() { }
+        protected abstract bool TryDeserializeIfSetUp(out object model);
 
-		public event EventHandler<object> DeserializationError;
+        protected abstract void FlushIfSetUp();
 
-		protected virtual void OnDeserializationError(object error)
-		{
-			DeserializationError?.Invoke(this, error);
-		}
-	}
+        protected virtual void RequireSetUp()
+        {
+            if (!IsSetUp) throw new InvalidOperationException("Not set up.");
+        }
+
+        protected virtual void OnDeserializationError(object error)
+        {
+            DeserializationError?.Invoke(this, error);
+        }
+    }
 }

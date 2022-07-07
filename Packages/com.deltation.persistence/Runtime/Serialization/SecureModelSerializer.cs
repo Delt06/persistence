@@ -7,60 +7,57 @@ using UnityEngine;
 
 namespace DELTation.Persistence.Serialization
 {
-	public sealed class SecureModelSerializer : FileModelSerializer
-	{
-		[SerializeField] private Encryption _encryption = Encryption.Base64;
-		
-		protected override void SerializeViaFormatter(object model)
-		{
-			_formatter.Serialize(_writeCryptoStream, model);
-		}
+    public sealed class SecureModelSerializer : FileModelSerializer
+    {
+        [SerializeField] private Encryption _encryption = Encryption.Base64;
+        private readonly BinaryFormatter _formatter = new BinaryFormatter();
 
-		protected override object DeserializeViaFormatter()
-		{
-			return _formatter.Deserialize(_readCryptoStream);
-		}
+        private CryptoStream _readCryptoStream;
+        private CryptoStream _writeCryptoStream;
 
-		protected override void SetUpProcedure(Type modelType)
-		{
-			base.SetUpProcedure(modelType);
+        protected override void SerializeViaFormatter(object model)
+        {
+            _formatter.Serialize(_writeCryptoStream, model);
+        }
 
-			var (encryptor, decryptor) = CreateTransforms();
-			_writeCryptoStream = new CryptoStream(Stream, encryptor, CryptoStreamMode.Write);
-			_readCryptoStream = new CryptoStream(Stream, decryptor, CryptoStreamMode.Read);
-		}
+        protected override object DeserializeViaFormatter() => _formatter.Deserialize(_readCryptoStream);
 
-		private (ICryptoTransform encrptor, ICryptoTransform decrytor) CreateTransforms()
-		{
-			switch (_encryption)
-			{
-				case Encryption.Base64:
-					return (new ToBase64Transform(), new FromBase64Transform());
-				case Encryption.RijndaelManaged:
-					
-					var rijndaelManaged = new RijndaelManaged();
-					rijndaelManaged.Key = GetKey(rijndaelManaged.KeySize / 8);
+        protected override void SetUpProcedure(Type modelType)
+        {
+            base.SetUpProcedure(modelType);
 
-					return (rijndaelManaged.CreateEncryptor(), rijndaelManaged.CreateDecryptor());
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
+            var (encryptor, decryptor) = CreateTransforms();
+            _writeCryptoStream = new CryptoStream(Stream, encryptor, CryptoStreamMode.Write);
+            _readCryptoStream = new CryptoStream(Stream, decryptor, CryptoStreamMode.Read);
+        }
 
-		private static byte[] GetKey(int byteCount)
-		{
-			var id = SystemInfo.deviceUniqueIdentifier;
-			return Encoding.Unicode.GetBytes(id).Take(byteCount).ToArray();
-		}
+        private (ICryptoTransform encrptor, ICryptoTransform decrytor) CreateTransforms()
+        {
+            switch (_encryption)
+            {
+                case Encryption.Base64:
+                    return (new ToBase64Transform(), new FromBase64Transform());
+                case Encryption.RijndaelManaged:
 
-		private CryptoStream _writeCryptoStream;
-		private CryptoStream _readCryptoStream;
-		private RijndaelManaged _rijndaelManaged;
-		private readonly BinaryFormatter _formatter = new BinaryFormatter();
+                    var rijndaelManaged = new RijndaelManaged();
+                    rijndaelManaged.Key = GetKey(rijndaelManaged.KeySize / 8);
 
-		private enum Encryption
-		{
-			Base64, RijndaelManaged
-		}
-	}
+                    return (rijndaelManaged.CreateEncryptor(), rijndaelManaged.CreateDecryptor());
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private static byte[] GetKey(int byteCount)
+        {
+            var id = SystemInfo.deviceUniqueIdentifier;
+            return Encoding.Unicode.GetBytes(id).Take(byteCount).ToArray();
+        }
+
+        private enum Encryption
+        {
+            Base64,
+            RijndaelManaged,
+        }
+    }
 }

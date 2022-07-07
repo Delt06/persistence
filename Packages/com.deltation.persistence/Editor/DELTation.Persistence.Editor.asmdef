@@ -1,0 +1,7 @@
+﻿{
+    "name": "DELTation.Persistence.Editor",
+    "rootNamespace": "DELTation.Persistence",
+    "references": [
+        "GUID:bb19a7b2f68b42619959b708161f511c"
+    ]
+}

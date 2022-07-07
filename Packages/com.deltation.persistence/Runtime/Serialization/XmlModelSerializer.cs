@@ -3,24 +3,21 @@ using System.Xml.Serialization;
 
 namespace DELTation.Persistence.Serialization
 {
-	public sealed class XmlModelSerializer : FileModelSerializer
-	{
-		protected override void SerializeViaFormatter(object model)
-		{
-			_formatter.Serialize(Stream, model);
-		}
+    public sealed class XmlModelSerializer : FileModelSerializer
+    {
+        private XmlSerializer _formatter;
 
-		protected override object DeserializeViaFormatter()
-		{
-			return _formatter.Deserialize(Stream);
-		}
+        protected override void SerializeViaFormatter(object model)
+        {
+            _formatter.Serialize(Stream, model);
+        }
 
-		protected override void SetUpProcedure(Type modelType)
-		{
-			base.SetUpProcedure(modelType);
-			_formatter = new XmlSerializer(modelType);
-		}
+        protected override object DeserializeViaFormatter() => _formatter.Deserialize(Stream);
 
-		private XmlSerializer _formatter;
-	}
+        protected override void SetUpProcedure(Type modelType)
+        {
+            base.SetUpProcedure(modelType);
+            _formatter = new XmlSerializer(modelType);
+        }
+    }
 }
